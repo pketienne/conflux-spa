@@ -9,7 +9,10 @@ const nextConfig = {
 				permanent: true
 			}
 		];
-	}
+	},
+	experimental: {
+		missingSuspenseWithCSRBailout: false,
+	},
 };
 
 export default nextConfig;
