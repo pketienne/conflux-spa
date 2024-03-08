@@ -8,7 +8,7 @@ import AppRightMenu from './AppRightMenu';
 import AppTopbar from './AppTopbar';
 import { LayoutContext } from './context/layoutcontext';
 import AppBreadcrumb from './AppBreadCrumb';
-import type { AppTopbarRef, ChildContainerProps } from '../types';
+import type { AppTopbarRef, ChildContainerProps } from '@/types';
 
 const Layout = (props: ChildContainerProps) => {
     const { layoutConfig, layoutState, setLayoutState, isSlim, isSlimPlus, isHorizontal, isDesktop, isSidebarActive } = useContext(LayoutContext);

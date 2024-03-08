@@ -5,7 +5,7 @@ import { classNames } from 'primereact/utils';
 import { useContext, useEffect, useRef } from 'react';
 import { LayoutContext } from './context/layoutcontext';
 import { MenuContext } from './context/menucontext';
-import type { AppMenuItemProps } from '../types';
+import type { AppMenuItemProps } from '@/types';
 import { useSubmenuOverlayPosition } from './hooks/useSubmenuOverlayPosition';
 import { usePathname, useSearchParams } from 'next/navigation';
 

@@ -1,7 +1,7 @@
 'use client';
 import Head from 'next/head';
 import React, { useState } from 'react';
-import type { ChildContainerProps, LayoutContextProps, LayoutConfig, LayoutState, Breadcrumb } from '../../types';
+import type { ChildContainerProps, LayoutContextProps, LayoutConfig, LayoutState, Breadcrumb } from '@/types';
 
 export const LayoutContext = React.createContext({} as LayoutContextProps);
 

@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 import { ObjectUtils, classNames } from 'primereact/utils';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { LayoutContext } from './context/layoutcontext';
-import { Breadcrumb } from '../types/layout';
+import { Breadcrumb } from '@/types/layout';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 

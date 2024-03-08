@@ -7,7 +7,7 @@ import { Sidebar } from 'primereact/sidebar';
 import { classNames } from 'primereact/utils';
 import { useContext, useEffect } from 'react';
 import { LayoutContext } from './context/layoutcontext';
-import type { AppConfigProps, ColorScheme } from '../types';
+import type { AppConfigProps, ColorScheme } from '@/types';
 
 const AppConfig = (props: AppConfigProps) => {
     const { layoutConfig, setLayoutConfig, layoutState, setLayoutState, isSlim, isSlimPlus, isHorizontal } = useContext(LayoutContext);
