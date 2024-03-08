@@ -1,5 +1,5 @@
 import AppSubMenu from './AppSubMenu';
-import type { MenuModel } from '@/types';
+import type { MenuModel } from '../types';
 
 const AppMenu = () => {
     const model: MenuModel[] = [
