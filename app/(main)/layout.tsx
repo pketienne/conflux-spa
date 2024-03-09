@@ -9,7 +9,6 @@ export const metadata: Metadata = {
     title: 'PrimeReact Freya',
     description: 'The ultimate collection of design-agnostic, flexible and accessible React UI Components.',
     robots: { index: false, follow: false },
-    viewport: { initialScale: 1, width: 'device-width' },
     openGraph: {
         type: 'website',
         title: 'PrimeReact FREYA-REACT',
@@ -22,6 +21,11 @@ export const metadata: Metadata = {
         icon: '/favicon.ico'
     }
 };
+
+export const viewport = {
+	initialScale: 1,
+	wdith: 'device-width',
+}
 
 export default function MainLayout({ children }: MainLayoutProps) {
     return <Layout>{children}</Layout>;
