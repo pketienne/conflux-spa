@@ -15,7 +15,6 @@ const Layout = (props: ChildContainerProps) => {
     const topbarRef = useRef<AppTopbarRef>(null);
     const sidebarRef = useRef<HTMLDivElement>(null);
     const pathname = usePathname();
-    const searchParams = useSearchParams();
 
     const [bindMenuOutsideClickListener, unbindMenuOutsideClickListener] = useEventListener({
         type: 'click',
@@ -93,7 +92,7 @@ const Layout = (props: ChildContainerProps) => {
         };
         onRouteChange();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [pathname, searchParams]);
+    }, [pathname]);
 
     useUnmountEffect(() => {
         unbindMenuOutsideClickListener();
