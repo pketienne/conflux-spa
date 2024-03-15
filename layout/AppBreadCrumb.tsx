@@ -59,7 +59,7 @@ const AppBreadcrumb = () => {
                         })
                     ) : (
                         <>
-                            {pathname === '/' && <li key={'home'}>E-Commerce Dashboard</li>}
+                            {pathname === '/' && <li key={'home'}>User Dashboard</li>}
                             {pathname === '/dashboards/banking' && <li key={'home'}>Banking Dashboard</li>}
                         </>
                     )}
