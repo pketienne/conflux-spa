@@ -86,7 +86,10 @@ const LandingPage: Page = () => {
     }, []);
 
     const navigateToLanding = () => {
-        router.push('/landing');
+        router.push('/');
+    };
+    const navigateToLogin = () => {
+        router.push('/auth/login');
     };
     const showModalDialog = () => {
         setDisplayModal(true);
@@ -234,7 +237,7 @@ const LandingPage: Page = () => {
                         </li>
                         <li className="flex align-items-center">
                             <StyleClass nodeRef={buttonRef as NodeRef} selector="@grandparent" enterClassName="hidden" enterActiveClassName="px-fadein" leaveToClassName="hidden">
-                                <Button ref={buttonRef} type="button" label="Buy Now" className="m-0 mt-3 md:mt-0 ml-3 md:ml-5"></Button>
+                                <Button onClick={navigateToLogin} ref={buttonRef} type="button" label="Login" className="m-0 mt-3 md:mt-0 ml-3 md:ml-5"></Button>
                             </StyleClass>
                         </li>
                     </ul>

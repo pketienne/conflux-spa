@@ -14,7 +14,7 @@ export const LayoutProvider = (props: ChildContainerProps) => {
         colorScheme: 'light',
         theme: 'teal',
         scale: 14,
-        menuTheme: 'light',
+        menuTheme: 'dark',
         topbarTheme: 'transparent'
     });
 
