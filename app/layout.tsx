@@ -1,4 +1,6 @@
 'use client';
+
+import React, { Suspense } from 'react';
 import { LayoutProvider } from '../layout/context/layoutcontext';
 import { PrimeReactProvider } from 'primereact/api';
 import '../styles/layout/layout.scss';
@@ -15,7 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </head>
             <body>
                 <PrimeReactProvider>
-                    <LayoutProvider>{children}</LayoutProvider>
+                    <Suspense><LayoutProvider>{children}</LayoutProvider></Suspense>
                 </PrimeReactProvider>
             </body>
         </html>
