@@ -1,4 +1,5 @@
 'use client';
+import { Suspense } from 'react'
 import AppMailLayout from '../../../../demo/components/apps/mail/AppMailLayout';
 
 interface AppMailLayoutProps {
@@ -6,5 +7,5 @@ interface AppMailLayoutProps {
 }
 
 export default function AppLayout({ children }: AppMailLayoutProps) {
-    return <AppMailLayout>{children}</AppMailLayout>;
+    return <Suspense><AppMailLayout>{children}</AppMailLayout></Suspense>;
 }
