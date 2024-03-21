@@ -890,9 +890,9 @@ export default function Banking() {
                                     </OverlayPanel>
                                 </div>
                                 <div className="flex gap-2">
-                                    <Button type="button" tooltip="'Exchange'" placeholder="bottom" icon="pi pi-arrows-h" className="p-button-rounded p-button-outlined flex-shrink-0"></Button>
-                                    <Button type="button" tooltip="'Withdraw'" placeholder="bottom" icon="pi pi-download" className="p-button-rounded p-button-outlined flex-shrink-0"></Button>
-                                    <Button type="button" tooltip="'Send'" placeholder="bottom" icon="pi pi-send" className="p-button-rounded flex-shrink-0"></Button>
+                                    <Button type="button" tooltip="'Exchange'" icon="pi pi-arrows-h" className="p-button-rounded p-button-outlined flex-shrink-0"></Button>
+                                    <Button type="button" tooltip="'Withdraw'" icon="pi pi-download" className="p-button-rounded p-button-outlined flex-shrink-0"></Button>
+                                    <Button type="button" tooltip="'Send'" icon="pi pi-send" className="p-button-rounded flex-shrink-0"></Button>
                                 </div>
                             </div>
                         </div>
