@@ -9,19 +9,19 @@ import AppMailTable from '../../../../../../demo/components/apps/mail/AppMailTab
 import type { Demo, Page } from '@/types';
 
 const MailImportant: Page = () => {
-    const [importantMails, setImportantMails] = useState<Demo.Mail[]>([]);
-    const { mails } = useContext(MailContext);
-    useEffect(() => {
-        const _mails = mails.filter((d) => d.important && !d.spam && !d.trash && !d.archived);
-        setImportantMails(_mails);
-    }, [mails]);
+	const [importantMails, setImportantMails] = useState<Demo.Mail[]>([]);
+	const { mails } = useContext(MailContext);
+	useEffect(() => {
+		const _mails = mails.filter((d) => d.important && !d.spam && !d.trash && !d.archived);
+		setImportantMails(_mails);
+	}, [mails]);
 
-    return (
-        <React.Fragment>
-            <Toast></Toast>
-            <AppMailTable mails={importantMails} />
-        </React.Fragment>
-    );
+	return (
+		<React.Fragment>
+			<Toast></Toast>
+			<AppMailTable mails={importantMails} />
+		</React.Fragment>
+	);
 };
 
 export default MailImportant;

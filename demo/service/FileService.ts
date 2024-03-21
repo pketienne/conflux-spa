@@ -1,33 +1,33 @@
 export const FileService = {
-    getFiles() {
-        return fetch('/demo/data/file-management.json', {
-            headers: { 'Cache-Control': 'no-cache' }
-        })
-            .then((res) => res.json())
-            .then((d) => d.files);
-    },
+	getFiles() {
+		return fetch('/demo/data/file-management.json', {
+			headers: { 'Cache-Control': 'no-cache' }
+		})
+			.then((res) => res.json())
+			.then((d) => d.files);
+	},
 
-    getMetrics() {
-        return fetch('/demo/data/file-management.json', {
-            headers: { 'Cache-Control': 'no-cache' }
-        })
-            .then((res) => res.json())
-            .then((d) => d.metrics);
-    },
+	getMetrics() {
+		return fetch('/demo/data/file-management.json', {
+			headers: { 'Cache-Control': 'no-cache' }
+		})
+			.then((res) => res.json())
+			.then((d) => d.metrics);
+	},
 
-    getFoldersSmall() {
-        return fetch('/demo/data/file-management.json', {
-            headers: { 'Cache-Control': 'no-cache' }
-        })
-            .then((res) => res.json())
-            .then((d) => d.folders_small);
-    },
+	getFoldersSmall() {
+		return fetch('/demo/data/file-management.json', {
+			headers: { 'Cache-Control': 'no-cache' }
+		})
+			.then((res) => res.json())
+			.then((d) => d.folders_small);
+	},
 
-    getFoldersLarge() {
-        return fetch('/demo/data/file-management.json', {
-            headers: { 'Cache-Control': 'no-cache' }
-        })
-            .then((res) => res.json())
-            .then((d) => d.folders_large);
-    }
+	getFoldersLarge() {
+		return fetch('/demo/data/file-management.json', {
+			headers: { 'Cache-Control': 'no-cache' }
+		})
+			.then((res) => res.json())
+			.then((d) => d.folders_large);
+	}
 };

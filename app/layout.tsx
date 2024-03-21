@@ -1,5 +1,5 @@
 'use client';
-import { Suspense } from 'react'
+import { Suspense } from 'react';
 import { LayoutProvider } from '../layout/context/layoutcontext';
 import { PrimeReactProvider } from 'primereact/api';
 import '../styles/layout/layout.scss';
@@ -9,16 +9,18 @@ import 'primereact/resources/primereact.css';
 import '../styles/demo/demo.scss';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-    return (
-        <html lang="en" suppressHydrationWarning>
-            <head>
-                <link id="theme-link" href={`/theme/theme-dark/teal/theme.css`} rel="stylesheet"></link>
-            </head>
-            <body>
-                <PrimeReactProvider>
-                    <Suspense><LayoutProvider>{children}</LayoutProvider></Suspense>
-                </PrimeReactProvider>
-            </body>
-        </html>
-    );
+	return (
+		<html lang="en" suppressHydrationWarning>
+			<head>
+				<link id="theme-link" href={`/theme/theme-dark/teal/theme.css`} rel="stylesheet"></link>
+			</head>
+			<body>
+				<PrimeReactProvider>
+					<Suspense>
+						<LayoutProvider>{children}</LayoutProvider>
+					</Suspense>
+				</PrimeReactProvider>
+			</body>
+		</html>
+	);
 }
