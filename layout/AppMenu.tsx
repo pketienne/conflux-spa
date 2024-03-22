@@ -4,6 +4,36 @@ import type { MenuModel } from '@/types';
 const AppMenu = () => {
 	const model: MenuModel[] = [
 		{
+			label: 'Conflux - Apps',
+			items: [
+				{
+					label: 'Calendar',
+					icon: 'pi pi-fw pi-home',
+					to: '/'
+				},
+				{
+					label: 'Accounting',
+					icon: 'pi pi-fw pi-home',
+					to: '/'
+				},
+				{
+					label: 'Projects',
+					icon: 'pi pi-fw pi-home',
+					to: '/'
+				},
+				{
+					label: 'Jobs',
+					icon: 'pi pi-fw pi-home',
+					to: '/'
+				},
+				{
+					label: 'Properties',
+					icon: 'pi pi-fw pi-home',
+					to: '/'
+				},
+			]
+		},
+		{
 			label: 'Dashboards',
 			icon: 'pi pi-home',
 			items: [
