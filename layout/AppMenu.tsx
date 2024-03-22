@@ -10,12 +10,12 @@ const AppMenu = () => {
 				{
 					label: 'E-Commerce',
 					icon: 'pi pi-fw pi-home',
-					to: '/'
+					to: '/dashboards/ecommerce',
 				},
 				{
 					label: 'Banking',
 					icon: 'pi pi-fw pi-image',
-					to: '/dashboards/banking'
+					to: '/dashboards/banking',
 				}
 			]
 		},

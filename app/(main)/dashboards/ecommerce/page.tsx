@@ -7,7 +7,7 @@ import { Chart } from 'primereact/chart';
 import { ChartData, ChartOptions } from 'chart.js';
 import { InputText } from 'primereact/inputtext';
 import { Menu } from 'primereact/menu';
-import { LayoutContext } from '../../layout/context/layoutcontext';
+import { LayoutContext } from '../../../../layout/context/layoutcontext';
 import { classNames } from 'primereact/utils';
 import { Message } from 'primereact/message';
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';

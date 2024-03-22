@@ -11,6 +11,8 @@
     "stylelint": "stylelint \"**/*.scss\""
   },
   "dependencies": {
+    "@aws-amplify/adapter-nextjs": "^1.0.21",
+    "@aws-amplify/ui-react": "^6.1.6",
     "@fullcalendar/core": "6.1.4",
     "@fullcalendar/daygrid": "6.1.4",
     "@fullcalendar/interaction": "6.1.4",
