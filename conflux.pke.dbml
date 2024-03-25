@@ -1,0 +1,375 @@
+Project Conflux {
+	database_type: 'PostgreSQL'
+}
+
+table Contacts {
+	id integer [pk, not null]
+	name varchar
+	ssn integer
+	phone integer
+	email varchar
+	is_company boolean [not null]
+	ein integer
+	dba varchar
+	notes longtext
+}
+
+table ContactsAddresses {
+	id integer [pk, not null]
+	primary boolean [not null]
+	contact_id integer [ref: > Contacts.id, not null]
+	address_id integer [ref: > Addresses.id, not null]
+}
+
+table Addresses {
+	id integer [pk, not null]
+	line_1 varchar [not null]
+	line_2 varchar
+	city varchar [not null]
+	state varchar [not null]
+	zip_code integer [not null]
+	zip_ext integer
+}
+
+table CompaniesInternal {
+	id integer [pk, not null]
+	contact_id integer [ref: - Contacts.id, not null]
+	note: '''
+		I'm not a fan of this, as we don't have a `Companies` table, and calling 
+		it `Companies` would be deceptive, but it's here in place of the previous 
+		"our_companies" table as an alias for internal companies.
+	'''
+}
+
+table Ownerships {
+	id integer [pk, not null]
+	contact_id_owner integer [ref: < Contacts.id]
+	contact_id_ownee integer [ref: < Contacts.id]
+	investment decimal [not null]
+	percentage decimal [not null]
+	notes varchar
+}
+
+table Properties {
+	id integer [pk, not null]
+	contact_id_owner integer [ref: > Contacts.id]
+	address_id integer [ref: - Addresses.id]
+	parcel_number integer
+	notes longtext
+}
+
+table DwellingUnit {
+	id integer [pk, not null]
+	property_id integer [ref: > Properties.id, not null]
+	address_id integer [ref: - Addresses.id, not null]
+	notes longtext
+	note: '''
+		See `DwellingUnitLogins` below for details about the former `passcode` field.
+	'''
+}
+
+table DwellingUnitLogins {
+	id integer [pk, not null]
+	dwelling_unit_id integer [ref: < DwellingUnit.id, not null]
+	login_id integer [ref: < Logins.id, not null]
+	note: '''
+		There's more than one way to skin this cat.
+		We could have one table which just has a field for each table with which we 
+		might want to associate a login, but that could require a lot of validation.
+		It would also be possible to create an Enum with a value for each table to 
+		which we'd want to associate an entry, and then just use that Enum value as 
+		a means to know which table to use when doing a lookup for the id in an "id" 
+		field within that table.
+
+		For now I'm just going to make a table per table association. Enum might be 
+		a better solution (and for Documents) later on.
+	'''
+}
+
+table ContactContracts {
+	id integer [pk, not null]
+	contact_id integer [ref: > Contacts.id, not null]
+	contract_id integer [ref: > Contracts.id, not null]
+}
+
+table ContractsUnits {
+	id integer [pk, not null]
+	contract_id integer [ref: - Contracts.id]
+	unit_id integer [ref: > Units.id, not null]
+	note: '''
+		This table associates a contract with a `DwellingUnit`. There is more than 
+		one type of contract where that would be needed, others would not. We will 
+		likely have a set of `Contracts{set}s` where the contract had a particular
+		set of attributes / fields.
+	'''
+}
+
+table Contracts {
+	id integer [pk, not null]
+	contract_type ContractTypes
+	account_number integer
+	sign date
+	start date
+	end date
+	due date
+	amount decimal
+	amount_is_exact boolean
+	frequency integer
+	frequency_type FrequencyTypes
+	notes longtext
+}
+
+note ContractTypes {
+	'''
+		I've added other kinds of contract types which were mentioned in the loom 
+		video. It would be good to go through each of these at some point and build 
+		out what changes/updates for tables, fields, and relations may be necessary 
+		in order to capture the appropriate data.
+	'''
+}
+enum ContractTypes {
+	rental
+	utility
+	construction
+	property_management
+	lawn_service
+	cleaners
+	taxes
+}
+
+note FrequencyTypes {
+	'''
+		Some contracts (e.g. rentals) will have "partial periods". For example, when 
+		a contract does not start on the first, or end on the last day of the month. 
+		How can these partial expected payments be handled?
+	'''
+}
+enum FrequencyTypes {
+	monthly
+	quarterly
+	yearly
+}
+
+table ContractsLogins {
+	id integer [pk, not null]
+	contract_id integer [ref: < Contracts.id, not null]
+	login_id integer [ref: < Logins.id, not null]
+	note: 'See note at `DwellingUnits`.'
+}
+
+table Logins {
+	id integer [pk, not null]
+	username varchar
+	password varchar
+	url varchar
+	notes longtext
+	note: '''
+		This table should (eventually) cover the following use cases:
+		- Contracts: See `ContractTypes`.
+		- Door Locks: associated with `DwellingUnits`.
+		- WiFi: Also associated with `DwellingUnits` (or `Properties`).
+		- Others?
+	'''
+}
+
+table Accounts {
+	id integer [pk, not null]
+	code integer
+	name varchar
+	description varchar
+	notes longtext
+	account_type AccountTypes [not null]
+}
+
+note AccountsJobTasks {
+	'''
+		At some point, we'll need to create a mapping between each JobTask's 
+		associated "CostCode" and the `Account` (of the Chart of Accounts) with 
+		which the CostCode should be associated.
+	'''
+}
+
+enum AccountTypes {
+	asset
+	liability
+	income
+	expense
+	equity
+}
+
+table Transactions {
+	id integer [pk, not null]
+	account_id integer [ref: > Accounts.id, not null]
+	posted date [not null]
+	name varchar [not null]
+	amount decimal [not null]
+	transaction_type TransactionTypes [not null]
+}
+
+table TransactionsActual {
+	id integer [pk, not null]
+	transaction_id integer [ref: - Transactions.id, not null]
+	note: '''
+		This is an alias and means for enforcing appropriate fields between the 
+		three main transactions tables.
+	'''
+}
+
+table TransactionsExpected {
+	id integer [pk, not null]
+	transaction_id integer [ref: - Transactions.id, not null]
+	transaction_actual_id integer [ref: - TransactionsActual.id]
+	note: '''
+		TODO:
+		- How do we add in alerts?
+		- Can we use this same method for expenses?
+		- Can we use this same method for receipts?
+	'''
+}
+
+table TransactionCategorizations {
+	id integer [pk, not null]
+	account_id integer [ref: < Accounts.id, not null]
+	transaction_id integer [ref: < Transactions.id, not null]
+	amount decimal [not null]
+	Note: '''
+		FYI: This is called "Categorizations" and not "Splits" because the "Set" of 
+		all categorizations includes the "Set" of all splits, where the inverse is 
+		not true.
+	'''
+}
+
+table TransactionsBank {
+	id integer [pk, not null]
+	account_id integer [ref: < Accounts.id, not null]
+	transaction_id integer [ref: - Transactions.id]
+	import integer [ref: < ImportsBank.id]
+	fitid integer [not null]
+	memo varchar [not null]
+}
+
+table TransactionSet {
+	id integer [pk, not null]
+	account_id integer [ref: < Accounts.id, not null]
+	account_type account_types [not null]
+	account_number integer [not null]
+	exported date [not null]
+	imported date [not null]
+	start date [not null]
+	end date [not null]
+	note: '''
+		FYI: This is called a "TransactionSet" because calling it an "import" would 
+		be misleading. It's both an import and an export and there are fields which 
+		relate to it being an import and fields which relate to it being an export.
+		E.g., it depends on where you are in the lifecycle of the data. But it's 
+		definitely not a "statement"!
+	'''
+}
+
+enum TransactionTypes {
+	credit
+	debit
+}
+
+table TasksJob {
+	id integer [pk, not null]
+	parent_id integer [ref: - TasksJob.id]
+	code integer [not null]
+	name varchar [not null]
+	description longtext
+}
+
+table TasksJobBranches {
+	id integer [pk, not null]
+	children_ids varchar [note: 'An array of `TasksJob` ids.']
+}
+
+table TasksJobLeaves {
+	id integer [pk, not null]
+	cost decimal
+	markup decimal
+	quantity decimal
+	tax decimal
+}
+
+note BudgetJob {
+	'''
+	This would be the aggregate cost of all leaves in the JobtasksLeaves table.
+	These kinds of Expectations are not dependent on time.
+	Alternatively, a start and end date could be required for a job and it could 
+	then use those as the "period".
+	'''
+}
+
+note ExpectedTransactionsJob {
+	'''
+	This could be implemented simply as just one transaction (ref: invoice) for 
+	the total cost of the job. Otherwise, it could be divided up into multiple 
+	transactions, one per each anticipated invoice.
+	'''
+}
+
+note BudgetAccount {
+	'''
+	This would be an arbitrary amount for a specified accounting period.
+	If we implemented some kind of accounting period, we could implement per-
+	account budgets. If the amount was known for the previous year, that number 
+	could be used as a guide.
+	'''
+}
+
+note ExpectedTransactionsAccount {
+	'''
+	This could have known periodic costs such as:
+	- software subscriptions
+	- license plate renewals
+	- annual or monthly insurance payments
+	- loan payments
+	- etc.
+	'''
+}
+
+note BudgetContract {
+	'''
+	This would be derived from the total amount expected over the course of the 
+	contract start and contract end dates.	
+	'''
+}
+
+note ExpectedTransactionsContract {
+	'''
+	This would be derived from the contract amount and frequency.
+	'''
+}
+
+note ExpectedTransactions {
+	'''
+	These could be entries in the `Transactions` table but with `posted` dates 
+	whose values are set to some time in the future.
+
+	However, this is something where we'd want to set the expectation and match 
+	that expectation with "actuals" once the relevant transactions hit the related 
+	bank account.
+
+	That being the case, we'd want to have two different kinds of transactions 
+	with an inheritance model, and be able to link a one-to-one relationship in 
+	the appropriate table. Would this also require some kind of split capability? 
+	Or is the current "categorizations" capability already sufficient?
+	'''
+}
+
+note AccountsAccountTypesEtc {
+	'''
+	Might this section be best thought of in terms of three different purposes:
+	1. Accounting
+	1. Budgeting
+	1. Job Costing
+
+	It seems like these are three very different but closely related things, and 
+	maybe it'd be better to treat them more distinctly that we have been so far.
+
+	Each of these seem to address significantly different purposes and seek to 
+	answer fairly different questsions. I think it might be better to handle them 
+	independently to start, then stitch them together afterward.
+	'''
+}

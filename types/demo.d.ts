@@ -212,6 +212,19 @@ declare namespace Demo {
 		[key: string]: string | string[] | number | boolean | undefined | ProductOrder[] | InventoryStatus | File[];
 	};
 
+	// ContactService
+	type Contact = {
+		id: number;
+		name: string;
+		ssn?: number;
+		phone: number;
+		email?: string;
+		type: string;
+		ein?: number;
+		dba?: string;
+		notes?: string;
+	};
+
 	type ProductOrder = {
 		id?: string;
 		productCode?: string;
