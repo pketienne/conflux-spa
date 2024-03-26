@@ -14,7 +14,9 @@ import { Toolbar } from 'primereact/toolbar';
 import { classNames } from 'primereact/utils';
 import React, { useEffect, useRef, useState } from 'react';
 import { ContactService } from '@/demo/service/ContactService';
+import { Dropdown } from 'primereact/dropdown';
 import type { Demo } from '@/types';
+import { cookiesClient } from '@/utils/amplify-utils';
 
 const Crud = () => {
 	let emptyContact = {
@@ -39,6 +41,9 @@ const Crud = () => {
 	const [globalFilter, setGlobalFilter] = useState('');
 	const toast = useRef<Toast | null>(null);
 	const dt = useRef<DataTable<any>>(null);
+	const [selectedCity, setSelectedCity] = useState('');
+
+	const { data: contacts } = await cookiesClient.models.Contacts.list();
 
 	useEffect(() => {
 		ContactService.getContacts().then((data) => setContacts(data));
@@ -409,86 +414,62 @@ const Crud = () => {
 						<Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
 					</DataTable>
 
-					<Dialog visible={contactDialog} style={{ width: '450px' }} header="Contact Details" modal className="p-fluid" footer={contactDialogFooter} onHide={hideDialog}>
+					<Dialog visible={contactDialog} style={{ width: '650px' }} header="Contact Details" modal className="p-fluid" footer={contactDialogFooter} onHide={hideDialog}>
 						{/* {contact.image && <img src={`/demo/images/contact/${contact.image}`} alt={contact.image} width="150" className="mt-0 mx-auto mb-5 block shadow-2" />} */}
 						<div className="field">
-							<label htmlFor="name">Name</label>
-							<InputText
-								id="name"
-								value={contact.name}
-								onChange={(e) => onInputChange(e, 'name')}
-								required
-								autoFocus
-								className={classNames({
-									'p-invalid': submitted && !contact.name
-								})}
-							/>
-							{submitted && !contact.name && <small className="p-invalid">Name is required.</small>}
-						</div>
-						<div className="field">
-							<label htmlFor="phone">Phone</label>
-							<InputText
-								id="phone"
-								value={contact.phone}
-								onChange={(e) => onInputChange(e, 'phone')}
-								required
-								autoFocus
-								className={classNames({
-									'p-invalid': submitted && !contact.phone
-								})}
-							/>
-							{submitted && !contact.phone && <small className="p-invalid">Phone is required.</small>}
-						</div>
-						<div className="field">
-							<label htmlFor="email">Email</label>
-							<InputText
-								id="email"
-								value={contact.email}
-								onChange={(e) => onInputChange(e, 'email')}
-								required
-								autoFocus
-								className={classNames({
-									'p-invalid': submitted && !contact.email
-								})}
-							/>
-							{submitted && !contact.email && <small className="p-invalid">Email is required.</small>}
-						</div>
-						<div className="field">
-							<label htmlFor="description">Description</label>
-							<InputTextarea id="description" value={contact.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
-						</div>
-
-						<div className="field">
-							<label className="mb-3">Category</label>
+							<label className="mb-3">Type</label>
 							<div className="formgrid grid">
 								<div className="field-radiobutton col-6">
-									<RadioButton inputId="category1" name="category" value="Accessories" onChange={onCategoryChange} checked={contact.category === 'Accessories'} />
-									<label htmlFor="category1">Accessories</label>
+									<RadioButton inputId="person" name="type" value="person" onChange={onCategoryChange} checked={contact.type === 'Person'} />
+									<label htmlFor="category1">Person</label>
 								</div>
 								<div className="field-radiobutton col-6">
-									<RadioButton inputId="category2" name="category" value="Clothing" onChange={onCategoryChange} checked={contact.category === 'Clothing'} />
-									<label htmlFor="category2">Clothing</label>
-								</div>
-								<div className="field-radiobutton col-6">
-									<RadioButton inputId="category3" name="category" value="Electronics" onChange={onCategoryChange} checked={contact.category === 'Electronics'} />
-									<label htmlFor="category3">Electronics</label>
-								</div>
-								<div className="field-radiobutton col-6">
-									<RadioButton inputId="category4" name="category" value="Fitness" onChange={onCategoryChange} checked={contact.category === 'Fitness'} />
-									<label htmlFor="category4">Fitness</label>
+									<RadioButton inputId="company" name="type" value="company" onChange={onCategoryChange} checked={contact.type === 'Company'} />
+									<label htmlFor="category2">Company</label>
 								</div>
 							</div>
 						</div>
 
 						<div className="formgrid grid">
 							<div className="field col">
-								<label htmlFor="price">Price</label>
-								<InputNumber id="price" value={contact.price as number} onValueChange={(e) => onInputNumberChange(e, 'price')} mode="currency" currency="USD" locale="en-US" />
+								<label htmlFor="name">Name</label>
+								<InputText id="name" value={contact.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !contact.name })} />
 							</div>
 							<div className="field col">
-								<label htmlFor="quantity">Quantity</label>
-								<InputNumber id="quantity" value={contact.quantity} onValueChange={(e) => onInputNumberChange(e, 'quantity')} />
+								<label htmlFor="dba">DBA</label>
+								<InputText id="dba" value={contact.dba} onChange={(e) => onInputChange(e, 'dba')} required autoFocus className={classNames({ 'p-invalid': submitted && !contact.dba })} />
 							</div>
+						</div>
+
+						<div className="formgrid grid">
+							<div className="field col">
+								<label htmlFor="phone">Phone</label>
+								{/* <InputText id="phone" value={contact.phone} onChange={(e) => onInputChange(e, 'phone')} required autoFocus className={classNames({ 'p-invalid': submitted && !contact.phone})} /> */}
+								<InputNumber value={contact.phone} onValueChange={(e) => onInputChange(e, 'phone')} required autoFocus className={classNames({ 'p-invalid': submitted && !contact.phone })} useGrouping={false} />
+								{/* <InputNumber value={contact.phone + ' blatherskite'} onValueChange={(e) => onInputChange(e, 'phone')} required autoFocus className={classNames({ 'p-invalid': submitted && !contact.phone })} useGrouping={false} /> */}
+							</div>
+							<div className="field col">
+								<label htmlFor="email">Email</label>
+								<InputText id="email" value={contact.email} onChange={(e) => onInputChange(e, 'email')} required autoFocus className={classNames({ 'p-invalid': submitted && !contact.email })} />
+							</div>
+						</div>
+
+						<div className="formgrid grid">
+							<div className="field col">
+								<label htmlFor="price">SSN</label>
+								{/* <InputText id="ssn" value={contact.ssn} onChange={(e) => onInputChange(e, 'ssn')} required autoFocus className={classNames({ 'p-invalid': submitted && !contact.ssn})} /> */}
+								<InputNumber value={contact.ssn} onValueChange={(e) => onInputChange(e, 'ssn')} required autoFocus className={classNames({ 'p-invalid': submitted && !contact.ssn})} useGrouping={false} />
+							</div>
+							<div className="field col">
+								<label htmlFor="quantity">EIN</label>
+								{/* <InputText id="ein" value={contact.ein} onChange={(e) => onInputChange(e, 'ein')} required autoFocus className={classNames({ 'p-invalid': submitted && !contact.ein})} /> */}
+								<InputNumber value={contact.ein} onValueChange={(e) => onInputChange(e, 'ein')} required autoFocus className={classNames({ 'p-invalid': submitted && !contact.ein})} useGrouping={false} />
+							</div>
+						</div>
+
+						<div className="field">
+							<label htmlFor="description">Notes</label>
+							<InputTextarea id="notes" value={contact.notes} onChange={(e) => onInputChange(e, 'notes')} required rows={3} cols={20} />
 						</div>
 					</Dialog>
 
