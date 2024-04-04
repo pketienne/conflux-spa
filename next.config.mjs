@@ -7,9 +7,9 @@ const nextConfig = {
 				source: '/apps/mail',
 				destination: '/apps/mail/inbox',
 				permanent: true,
-			}
+			},
 		];
-	}
-}
+	},
+};
 
 export default nextConfig;
