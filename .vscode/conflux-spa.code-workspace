@@ -1,9 +1,11 @@
 {
 	"folders": [
 		{
+			"name": "freya-10.0.0",
 			"path": "../../freya-10.0.0"
 		},
 		{
+			"name": "conflux-spa",
 			"path": ".."
 		}
 	]
