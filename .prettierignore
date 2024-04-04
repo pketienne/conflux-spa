@@ -2,9 +2,10 @@
 build
 coverage
 dist
+node_modules
 out
 public
 styles
-node_modules
+.amplify
 .next
 .vscode
