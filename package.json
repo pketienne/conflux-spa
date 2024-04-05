@@ -40,18 +40,7 @@
 	},
 	"husky": {
 		"hooks": {
-			"pre-commit": "lint-staged"
-		},
-		"lint-staged": {
-			"*.{js,jsx}": [
-				"prettier --write",
-				"eslint --fix",
-				"git add"
-			],
-			"*.{html,css,less,ejs}": [
-				"prettier --write",
-				"git add"
-			]
+			"pre-commit": "prettier --write ."
 		}
 	},
 	"name": "conflux-spa",
@@ -61,7 +50,8 @@
 		"dev": "next dev",
 		"format": "prettier --write .",
 		"lint": "next lint",
-		"start": "next start"
+		"start": "next start",
+		"prepare": "husky"
 	},
 	"version": "0.0.8"
 }
