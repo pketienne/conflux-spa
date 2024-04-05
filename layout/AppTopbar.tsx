@@ -1,10 +1,12 @@
-import { InputText } from 'primereact/inputtext';
-import { forwardRef, useContext, useImperativeHandle, useRef } from 'react';
-import { LayoutContext } from './context/layoutcontext';
 import { Button } from 'primereact/button';
+import { InputText } from 'primereact/inputtext';
+import { LayoutContext } from './context/layoutcontext';
 import { StyleClass } from 'primereact/styleclass';
-import { classNames } from 'primereact/utils';
 import { Ripple } from 'primereact/ripple';
+import { signOut } from 'aws-amplify/auth';
+import { classNames } from 'primereact/utils';
+import { forwardRef, useContext, useImperativeHandle, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import AppSidebar from './AppSidebar';
 
 const AppTopbar = forwardRef((props: { sidebarRef: React.RefObject<HTMLDivElement> }, ref) => {
@@ -18,6 +20,8 @@ const AppTopbar = forwardRef((props: { sidebarRef: React.RefObject<HTMLDivElemen
 	const settingsRef = useRef(null);
 	const logoutRef = useRef(null);
 
+	const router = useRouter();
+
 	const onMenuButtonClick = () => {
 		onMenuToggle();
 	};
@@ -25,6 +29,11 @@ const AppTopbar = forwardRef((props: { sidebarRef: React.RefObject<HTMLDivElemen
 	const onConfigButtonClick = () => {
 		showConfigSidebar();
 	};
+
+	const onLogoutLinkClick = async () => {
+		await signOut();
+		router.push('/auth');
+	}
 
 	useImperativeHandle(ref, () => ({
 		menubutton: menubuttonRef.current,
@@ -87,7 +96,7 @@ const AppTopbar = forwardRef((props: { sidebarRef: React.RefObject<HTMLDivElemen
 								</li>
 								<li role="menuitem" className="m-0">
 									<StyleClass nodeRef={logoutRef} selector="@grandparent" enterClassName="hidden" enterActiveClassName="px-scalein" leaveToClassName="hidden" leaveActiveClassName="px-fadeout" hideOnOutsideClick>
-										<a ref={logoutRef} className="flex align-items-center hover:text-primary-500 transition-duration-200">
+										<a onClick={onLogoutLinkClick} ref={logoutRef} className="flex align-items-center hover:text-primary-500 transition-duration-200">
 											<i className="pi pi-fw pi-sign-out mr-2"></i>
 											<span>Logout</span>
 										</a>
