@@ -7,13 +7,13 @@ import { LayoutContext } from './context/layoutcontext';
 import { MenuContext } from './context/menucontext';
 import type { AppMenuItemProps } from '@/types';
 import { useSubmenuOverlayPosition } from './hooks/useSubmenuOverlayPosition';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 const AppMenuitem = (props: AppMenuItemProps) => {
 	const { activeMenu, setActiveMenu } = useContext(MenuContext);
 	const { isSlim, isSlimPlus, isHorizontal, isDesktop, setLayoutState, layoutState, layoutConfig } = useContext(LayoutContext);
 	const pathname = usePathname();
-	const searchParams = useSearchParams();
+	const searchParams = '';
 	const submenuRef = useRef<HTMLUListElement>(null);
 	const menuitemRef = useRef<HTMLLIElement>(null);
 	const item = props.item;
