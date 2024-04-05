@@ -33,7 +33,7 @@ const AppTopbar = forwardRef((props: { sidebarRef: React.RefObject<HTMLDivElemen
 	const onLogoutLinkClick = async () => {
 		await signOut();
 		router.push('/auth');
-	}
+	};
 
 	useImperativeHandle(ref, () => ({
 		menubutton: menubuttonRef.current,

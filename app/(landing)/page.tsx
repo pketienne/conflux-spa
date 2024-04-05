@@ -85,7 +85,7 @@ const LandingPage: Page = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const navigateToAuth= () => {
+	const navigateToAuth = () => {
 		router.push('/auth');
 	};
 	const navigateToLanding = () => {
