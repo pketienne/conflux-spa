@@ -1,17 +1,17 @@
 'use client';
 
-import { withAuthenticator } from '@aws-amplify/ui-react';
 import ContactList from '@/components/ContactList';
-import '@aws-amplify/ui-react/styles.css';
 
-function App() {
+function Contacts() {
 	return (
-		<>
-			<h1>Hello, Amplify 👋</h1>
-			<br />
-			<ContactList />
-		</>
+		<div className="grid">
+			<div className="col-12">
+				<div className="card">
+					<ContactList />
+				</div>
+			</div>
+		</div>
 	);
 }
 
-export default withAuthenticator(App);
+export default Contacts;
