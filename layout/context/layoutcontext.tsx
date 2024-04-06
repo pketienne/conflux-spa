@@ -11,10 +11,10 @@ export const LayoutProvider = (props: ChildContainerProps) => {
 		ripple: true,
 		inputStyle: 'outlined',
 		menuMode: 'drawer',
-		colorScheme: 'light',
+		colorScheme: 'dark',
 		theme: 'teal',
 		scale: 14,
-		menuTheme: 'light',
+		menuTheme: 'dark',
 		topbarTheme: 'transparent',
 	});
 
