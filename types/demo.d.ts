@@ -222,6 +222,21 @@ declare namespace Demo {
 		status?: Status;
 	};
 
+	//ContactService
+	type Contact = {
+		readonly id: string;
+		readonly createdAt: string;
+		readonly updatedAt: string;
+		name?: Nullable<string> | undefined;
+		phone?: Nullable<string> | undefined;
+		email?: Nullable<string> | undefined;
+		type?: Nullable<string> | undefined;
+		ssn?: Nullable<number> | undefined;
+		ein?: Nullable<number> | undefined;
+		dba?: Nullable<string> | undefined;
+		notes?: Nullable<string> | undefined;
+	}
+
 	type Payment = {
 		name: string;
 		amount: number;
