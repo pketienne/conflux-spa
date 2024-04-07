@@ -235,7 +235,7 @@ declare namespace Demo {
 		ein?: Nullable<number> | undefined;
 		dba?: Nullable<string> | undefined;
 		notes?: Nullable<string> | undefined;
-	}
+	};
 
 	type Payment = {
 		name: string;
