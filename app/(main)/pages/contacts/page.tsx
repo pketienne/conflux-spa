@@ -1,17 +1,13 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import ContactsCreateForm from '@/ui-components/ContactsCreateForm';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
-import { FileUpload } from 'primereact/fileupload';
-import { InputText } from 'primereact/inputtext';
-import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
 import { generateClient } from 'aws-amplify/data';
-import { FilterMatchMode } from 'primereact/api';
-import ContactsCreateForm from '@/ui-components/ContactsCreateForm';
+import { useEffect, useState } from 'react';
 import type { Demo } from '@/types';
 import type { Schema } from '@/amplify/data/resource';
 
@@ -32,233 +28,59 @@ const Items = () => {
 		notes: '',
 	};
 
-	const [items, setItems] = useState<Demo.Contact[]>([]);
-	const [itemDialog, setItemDialog] = useState(false);
+	const [createItemDialog, setCreateItemDialog] = useState(false);
 	const [deleteItemDialog, setDeleteItemDialog] = useState(false);
-	const [deleteItemsDialog, setDeleteItemsDialog] = useState(false);
-	const [item, setItem] = useState(emptyItem);
-	const [selectedItems, setSelectedItems] = useState<Demo.Contact[]>([]);
-	const [submitted, setSubmitted] = useState(false);
-	const [globalFilter, setGlobalFilter] = useState('');
-	const toast = useRef<Toast | null>(null);
-	const dt = useRef<DataTable<any>>(null);
-	const [filters, setFilters] = useState({
-		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-		createdAt: { value: null, matchMode: FilterMatchMode.CONTAINS },
-		updatedAt: { value: null, matchMode: FilterMatchMode.CONTAINS },
-		name: { value: null, matchMode: FilterMatchMode.CONTAINS },
-		phone: { value: null, matchMode: FilterMatchMode.CONTAINS },
-		email: { value: null, matchMode: FilterMatchMode.CONTAINS },
-		type: { value: null, matchMode: FilterMatchMode.CONTAINS },
-		ssn: { value: null, matchMode: FilterMatchMode.CONTAINS },
-		ein: { value: null, matchMode: FilterMatchMode.CONTAINS },
-		dba: { value: null, matchMode: FilterMatchMode.CONTAINS },
-		notes: { value: null, matchMode: FilterMatchMode.CONTAINS },
-	});
+	const [item, setItem] = useState<Demo.Contact>(emptyItem);
+	const [items, setItems] = useState<Demo.Contact[]>([]);
 
 	useEffect(() => {
 		const sub = client.models.Contacts.observeQuery().subscribe(({ items }) => setItems([...items]));
 		return () => sub.unsubscribe();
 	}, []);
 
-	const openNew = () => {
+	const createItem = () => {
 		setItem(emptyItem);
-		setSubmitted(false);
-		setItemDialog(true);
+		setCreateItemDialog(true);
 	};
 
-	const hideDialog = () => {
-		setSubmitted(false);
-		setItemDialog(false);
-	};
-
-	const hideDeleteItemDialog = () => {
-		setDeleteItemDialog(false);
-	};
-
-	const hideDeleteItemsDialog = () => {
-		setDeleteItemsDialog(false);
-	};
-
-	const saveItem = () => {
-		setSubmitted(true);
-
-		if (item.name.trim()) {
-			let _items = [...items];
-			let _item = { ...item };
-			if (item.id) {
-				const index = findIndexById(item.id);
-
-				_items[index] = _item;
-				toast.current?.show({
-					severity: 'success',
-					summary: 'Successful',
-					detail: 'Item Updated',
-					life: 3000,
-				});
-			} else {
-				_item.id = createId();
-				_items.push(_item);
-				toast.current?.show({
-					severity: 'success',
-					summary: 'Successful',
-					detail: 'Item Created',
-					life: 3000,
-				});
-			}
-
-			setItems(_items);
-			setItemDialog(false);
-			setItem(emptyItem);
-		}
-	};
-
-	const editItem = (item: Demo.Contact) => {
-		setItem({ ...item });
-		setItemDialog(true);
-	};
-
-	const confirmDeleteItem = (item: Demo.Contact) => {
+	const deleteItem = (item: Demo.Contact) => {
 		setItem(item);
 		setDeleteItemDialog(true);
 	};
 
-	const deleteItem = () => {
-		let _items = items.filter((val) => val.id !== item.id);
-		setItems(_items);
+	const hideCreateItemDialog = () => {
+		setCreateItemDialog(false);
+	}
+
+	const hideDeleteItemDialog = () => {
 		setDeleteItemDialog(false);
-		setItem(emptyItem);
-		toast.current?.show({
-			severity: 'success',
-			summary: 'Successful',
-			detail: 'Item Deleted',
-			life: 3000,
-		});
-	};
-
-	const findIndexById = (id: string) => {
-		let index = -1;
-		for (let i = 0; i < items.length; i++) {
-			if (items[i].id === id) {
-				index = i;
-				break;
-			}
-		}
-		return index;
-	};
-
-	const createId = () => {
-		let id = '';
-		let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-		for (let i = 0; i < 5; i++) {
-			id += chars.charAt(Math.floor(Math.random() * chars.length));
-		}
-		return id;
-	};
-
-	const exportCSV = () => {
-		dt.current?.exportCSV();
-	};
-
-	const confirmDeleteSelected = () => {
-		setDeleteItemsDialog(true);
-	};
-
-	const deleteSelectedItems = () => {
-		let _items = items?.filter((val) => !selectedItems.includes(val));
-		setItems(_items);
-		setDeleteItemsDialog(false);
-		setSelectedItems([]);
-		toast.current?.show({
-			severity: 'success',
-			summary: 'Successful',
-			detail: 'Items Deleted',
-			life: 3000,
-		});
-	};
+	}
 
 	const startToolbarTemplate = () => {
 		return (
-			<React.Fragment>
-				<div className="my-2">
-					<Button label="New" icon="pi pi-plus" severity="success" className="mr-2" onClick={openNew} />
-					<Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedItems || !selectedItems.length} />
-				</div>
-			</React.Fragment>
-		);
-	};
-
-	const endToolbarTemplate = () => {
-		return (
-			<React.Fragment>
-				<FileUpload mode="basic" accept="image/*" maxFileSize={1000000} chooseLabel="Import" className="mr-2 inline-block" />
-				<Button label="Export" icon="pi pi-upload" severity="help" onClick={exportCSV} />
-			</React.Fragment>
-		);
-	};
-
-	const actionBodyTemplate = (rowData: Demo.Contact) => {
-		return (
 			<>
-				<Button icon="pi pi-pencil" rounded severity="success" className="mr-2" onClick={() => editItem(rowData)} />
-				<Button icon="pi pi-trash" severity="warning" rounded onClick={() => confirmDeleteItem(rowData)} />
+				<div className="my-2">
+					<Button label="New" icon="pi pi-plus" severity="success" className="mr-2" onClick={createItem} />
+				</div>
 			</>
 		);
 	};
 
-	const header = (
-		<div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-			<h5 className="m-0">Manage Items</h5>
-			<span className="block mt-2 md:mt-0 p-input-icon-left">
-				<i className="pi pi-search" />
-				<InputText type="search" onInput={(e) => setGlobalFilter((e.target as HTMLInputElement).value)} placeholder="Search..." />
-			</span>
-		</div>
-	);
-
-	const itemDialogFooter = (
-		<>
-			<Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
-			<Button label="Save" icon="pi pi-check" text onClick={saveItem} />
-		</>
-	);
-	const deleteItemDialogFooter = (
-		<>
-			<Button label="No" icon="pi pi-times" text onClick={hideDeleteItemDialog} />
-			<Button label="Yes" icon="pi pi-check" text onClick={deleteItem} />
-		</>
-	);
-	const deleteItemsDialogFooter = (
-		<>
-			<Button label="No" icon="pi pi-times" text onClick={hideDeleteItemsDialog} />
-			<Button label="Yes" icon="pi pi-check" text onClick={deleteSelectedItems} />
-		</>
-	);
+	const actionBodyTemplate = (data: Demo.Contact) => {
+		return (
+			<>
+				<Button icon="pi pi-trash" severity="warning" rounded onClick={() => deleteItem(item)} />
+			</>
+		);
+	};
 
 	return (
-		<div className="grid crud-demo">
+		<div className="grid">
 			<div className="col-12">
 				<div className="card">
-					<Toast ref={toast} />
-					<Toolbar className="mb-4" start={startToolbarTemplate} end={endToolbarTemplate}></Toolbar>
-					<DataTable
-						className="datatable-responsive"
-						dataKey="id"
-						emptyMessage="No items found."
-						filterDisplay="row"
-						filters={filters}
-						globalFilter={globalFilter}
-						header={header}
-						multiSortMeta={[{ field: 'name', order: 1 }]}
-						onSelectionChange={(e) => setSelectedItems(e.value)}
-						ref={dt}
-						removableSort
-						responsiveLayout="scroll"
-						selection={selectedItems}
-						sortMode="multiple"
-						value={items}
-					>
-						<Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
+					<Toolbar className="mb-4" start={startToolbarTemplate}></Toolbar>
+					<DataTable className="datatable-responsive" dataKey="id" emptyMessage="No items found." filterDisplay="row" multiSortMeta={[{ field: 'name', order: 1 }]} removableSort sortMode="multiple" value={items}>
+						<Column selectionMode="multiple" headerStyle={{ width: '1rem' }}></Column>
 						<Column sortable filter style={{ minWidth: '15rem' }} field="createdAt" header="Created" filterPlaceholder="Created" />
 						<Column sortable filter style={{ minWidth: '15rem' }} field="updatedAt" header="Updated" filterPlaceholder="Updated" />
 						<Column sortable filter style={{ minWidth: '15rem' }} field="name" header="Name" filterPlaceholder="Name" />
@@ -271,12 +93,10 @@ const Items = () => {
 						<Column sortable filter style={{ minWidth: '15rem' }} field="notes" header="Notes" filterPlaceholder="Notes" />
 						<Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
 					</DataTable>
-
-					<Dialog visible={itemDialog} style={{ width: '450px' }} header="Item Details" modal className="p-fluid" footer={itemDialogFooter} onHide={hideDialog}>
+					<Dialog visible={createItemDialog} style={{ width: '450px' }} modal className="p-fluid" onHide={hideCreateItemDialog} header="Contact Details">
 						<ContactsCreateForm />
 					</Dialog>
-
-					<Dialog visible={deleteItemDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteItemDialogFooter} onHide={hideDeleteItemDialog}>
+					<Dialog visible={deleteItemDialog} style={{ width: '450px' }} header="Confirm" modal onHide={hideDeleteItemDialog}>
 						<div className="flex align-items-center justify-content-center">
 							<i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
 							{item && (
@@ -287,12 +107,6 @@ const Items = () => {
 						</div>
 					</Dialog>
 
-					<Dialog visible={deleteItemsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteItemsDialogFooter} onHide={hideDeleteItemsDialog}>
-						<div className="flex align-items-center justify-content-center">
-							<i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-							{item && <span>Are you sure you want to delete the selected items?</span>}
-						</div>
-					</Dialog>
 				</div>
 			</div>
 		</div>
