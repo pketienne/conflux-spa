@@ -28,49 +28,29 @@ const Items = () => {
 		notes: '',
 	};
 
-	const [createItemDialog, setCreateItemDialog] = useState(false);
-	const [deleteItemDialog, setDeleteItemDialog] = useState(false);
 	const [item, setItem] = useState<Demo.Contact>(emptyItem);
 	const [items, setItems] = useState<Demo.Contact[]>([]);
+	const [itemCreateDialogVisible, setItemCreateDialogVisible] = useState(false);
 
 	useEffect(() => {
 		const sub = client.models.Contacts.observeQuery().subscribe(({ items }) => setItems([...items]));
 		return () => sub.unsubscribe();
 	}, []);
 
-	const createItem = () => {
+	const itemCreateDialog = () => {
 		setItem(emptyItem);
-		setCreateItemDialog(true);
+		setItemCreateDialogVisible(true);
 	};
 
-	const deleteItem = (item: Demo.Contact) => {
-		setItem(item);
-		setDeleteItemDialog(true);
-	};
-
-	const hideCreateItemDialog = () => {
-		setCreateItemDialog(false);
-	}
-
-	const hideDeleteItemDialog = () => {
-		setDeleteItemDialog(false);
+	const itemCreateDialogHide = () => {
+		setItemCreateDialogVisible(false);
 	}
 
 	const startToolbarTemplate = () => {
 		return (
-			<>
-				<div className="my-2">
-					<Button label="New" icon="pi pi-plus" severity="success" className="mr-2" onClick={createItem} />
-				</div>
-			</>
-		);
-	};
-
-	const actionBodyTemplate = (data: Demo.Contact) => {
-		return (
-			<>
-				<Button icon="pi pi-trash" severity="warning" rounded onClick={() => deleteItem(item)} />
-			</>
+			<div className="my-2">
+				<Button label="New" icon="pi pi-plus" severity="success" className="mr-2" onClick={itemCreateDialog} />
+			</div>
 		);
 	};
 
@@ -91,22 +71,10 @@ const Items = () => {
 						<Column sortable filter style={{ minWidth: ' 1rem' }} field="ein" header="EIN" filterPlaceholder="EIN" />
 						<Column sortable filter style={{ minWidth: '15rem' }} field="dba" header="DBA" filterPlaceholder="DBA" />
 						<Column sortable filter style={{ minWidth: '15rem' }} field="notes" header="Notes" filterPlaceholder="Notes" />
-						<Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
 					</DataTable>
-					<Dialog visible={createItemDialog} style={{ width: '450px' }} modal className="p-fluid" onHide={hideCreateItemDialog} header="Contact Details">
+					<Dialog visible={itemCreateDialogVisible} style={{ width: '450px' }} header="Item Details" modal className="p-fluid" onHide={itemCreateDialogHide}>
 						<ContactsCreateForm />
 					</Dialog>
-					<Dialog visible={deleteItemDialog} style={{ width: '450px' }} header="Confirm" modal onHide={hideDeleteItemDialog}>
-						<div className="flex align-items-center justify-content-center">
-							<i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-							{item && (
-								<span>
-									Are you sure you want to delete <b>{item.name}</b>?
-								</span>
-							)}
-						</div>
-					</Dialog>
-
 				</div>
 			</div>
 		</div>
