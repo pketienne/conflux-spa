@@ -52,7 +52,7 @@ const Items = () => {
 			detail: 'Item Deleted',
 			life: 3000,
 		});
-	}
+	};
 
 	const itemCreateDialogShow = () => {
 		setItem(emptyItem);
@@ -66,7 +66,7 @@ const Items = () => {
 	const itemUpdateDialogShow = (item: Demo.Contact) => {
 		setItem(item);
 		setItemUpdateDialogVisible(true);
-	}
+	};
 
 	const itemUpdateDialogHide = () => {
 		setItemUpdateDialogVisible(false);
@@ -75,11 +75,11 @@ const Items = () => {
 	const itemDeleteDialogShow = (item: Demo.Contact) => {
 		setItem(item);
 		setItemDeleteDialogVisible(true);
-	}
+	};
 
 	const itemDeleteDialogHide = () => {
 		setItemDeleteDialogVisible(false);
-	}
+	};
 
 	const itemDeleteDialogFooter = (
 		<>
@@ -140,7 +140,6 @@ const Items = () => {
 							{item && <span>Are you sure you want to delete the selected products?</span>}
 						</div>
 					</Dialog>
-
 				</div>
 			</div>
 		</div>
