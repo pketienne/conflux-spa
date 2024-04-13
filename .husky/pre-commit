@@ -2,4 +2,5 @@ npm run format
 npm run lint
 tsc
 npm run test
+npx playwright test
 
