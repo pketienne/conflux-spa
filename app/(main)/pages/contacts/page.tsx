@@ -57,12 +57,12 @@ const Items = () => {
 	};
 
 	const itemsDeleteAPI = async () => {
-		for (const i of itemsSelected) {
-			setItem(i);
-			const { data: deletedItem, errors } = await client.models.Contacts.delete(item);
-			// console.log(data);
-			console.log(errors);
-		}
+		// for (const i of itemsSelected) {
+		// 	setItem(i);
+		// 	const { data: deletedItem, errors } = await client.models.Contacts.delete(item);
+		// console.log(data);
+		// 	console.log(errors);
+		// }
 		setItemsDeleteDialogVisible(false);
 	};
 
@@ -144,7 +144,7 @@ const Items = () => {
 						dataKey="id"
 						filterDisplay="row"
 						multiSortMeta={[{ field: 'name', order: 1 }]}
-						onSelectionChange={(e) => setItemsSelected(e.value)}
+						// onSelectionChange={(e) => setItemsSelected(e.value)} // Typescript Error
 						removableSort
 						selection={itemsSelected}
 						sortMode="multiple"
