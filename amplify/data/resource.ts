@@ -12,7 +12,7 @@ const schema = a.schema({
 			dba: a.string(),
 			notes: a.string(),
 		})
-		.authorization([a.allow.owner()]),
+		.authorization([a.allow.owner(), a.allow.public()]),
 });
 
 export type Schema = ClientSchema<typeof schema>;

@@ -32,9 +32,11 @@ const Items = () => {
 
 	const [item, setItem] = useState<Demo.Contact>(emptyItem);
 	const [items, setItems] = useState<Demo.Contact[]>([]);
+	const [itemsSelected, setItemsSelected] = useState<Demo.Contact[]>();
 	const [itemCreateDialogVisible, setItemCreateDialogVisible] = useState(false);
 	const [itemUpdateDialogVisible, setItemUpdateDialogVisible] = useState(false);
 	const [itemDeleteDialogVisible, setItemDeleteDialogVisible] = useState(false);
+	const [itemsDeleteDialogVisible, setItemsDeleteDialogVisible] = useState(false);
 	const toast = useRef<Toast | null>(null);
 
 	useEffect(() => {
@@ -52,6 +54,16 @@ const Items = () => {
 			detail: 'Item Deleted',
 			life: 3000,
 		});
+	};
+
+	const itemsDeleteAPI = async () => {
+		for (const i of itemsSelected) {
+			setItem(i);
+			const { data: deletedItem, errors } = await client.models.Contacts.delete(item);
+			// console.log(data);
+			console.log(errors);
+		}
+		setItemsDeleteDialogVisible(false);
 	};
 
 	const itemCreateDialogShow = () => {
@@ -77,6 +89,14 @@ const Items = () => {
 		setItemDeleteDialogVisible(true);
 	};
 
+	const itemsDeleteDialogShow = () => {
+		setItemsDeleteDialogVisible(true);
+	};
+
+	const itemsDeleteDialogHide = () => {
+		setItemsDeleteDialogVisible(false);
+	};
+
 	const itemDeleteDialogHide = () => {
 		setItemDeleteDialogVisible(false);
 	};
@@ -88,10 +108,18 @@ const Items = () => {
 		</>
 	);
 
+	const itemsDeleteDialogFooter = (
+		<>
+			<Button label="No" icon="pi pi-times" text onClick={itemsDeleteDialogHide} />
+			<Button label="Yes" icon="pi pi-check" text onClick={itemsDeleteAPI} />
+		</>
+	);
+
 	const startToolbarTemplate = () => {
 		return (
 			<div className="my-2">
 				<Button label="New" icon="pi pi-plus" severity="success" className="mr-2" onClick={itemCreateDialogShow} />
+				<Button label="Delete" icon="pi pi-trash" severity="danger" disabled={!itemsSelected || !itemsSelected.length} onClick={itemsDeleteDialogShow} />
 			</div>
 		);
 	};
@@ -111,7 +139,17 @@ const Items = () => {
 				<div className="card">
 					<Toolbar className="mb-4" start={startToolbarTemplate}></Toolbar>
 
-					<DataTable className="datatable-responsive" dataKey="id" emptyMessage="No items found." filterDisplay="row" multiSortMeta={[{ field: 'name', order: 1 }]} removableSort sortMode="multiple" value={items}>
+					<DataTable
+						className="datatable-responsive"
+						dataKey="id"
+						filterDisplay="row"
+						multiSortMeta={[{ field: 'name', order: 1 }]}
+						onSelectionChange={(e) => setItemsSelected(e.value)}
+						removableSort
+						selection={itemsSelected}
+						sortMode="multiple"
+						value={items}
+					>
 						<Column selectionMode="multiple" headerStyle={{ width: '1rem' }}></Column>
 						<Column sortable filter style={{ minWidth: '15rem' }} field="createdAt" header="Created" filterPlaceholder="Created" />
 						<Column sortable filter style={{ minWidth: '15rem' }} field="updatedAt" header="Updated" filterPlaceholder="Updated" />
@@ -134,7 +172,7 @@ const Items = () => {
 						<ContactsUpdateForm id={item.id} contacts={item} />
 					</Dialog>
 
-					<Dialog visible={itemDeleteDialogVisible} style={{ width: '450px' }} header="Confirm" modal footer={itemDeleteDialogFooter} onHide={itemDeleteDialogHide}>
+					<Dialog visible={itemsDeleteDialogVisible} style={{ width: '450px' }} header="Confirm" modal footer={itemsDeleteDialogFooter} onHide={itemDeleteDialogHide}>
 						<div className="flex align-items-center justify-content-center">
 							<i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
 							{item && <span>Are you sure you want to delete the selected products?</span>}
